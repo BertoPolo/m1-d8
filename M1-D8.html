@@ -50,12 +50,13 @@
         questions!
       </h2>
     </div>
+    <button onclick="changeUrls()">exercise</button>
     <script>
       /* EXERCISE 1
        Write a function for changing the title of the document in something else.
       */
 
-      // let newTitle=  " I changed the title, haha!"
+      
 
       const changeTitle = function (newTitle) {
        
@@ -63,6 +64,7 @@
 
         changerNode.innerText = newTitle
       };
+      changeTitle("hi looser")
 
       /* EXERCISE 2
        Write a function for changing the class of the title of the page in "myHeading".
@@ -72,24 +74,34 @@
 
         const adderToTitleNode = document.getElementsByTagName("h1")[0]
 
-          adderToTitleNode.classList("myHeading") // should add toggle or something more??
+        adderToTitleNode.classList("myHeading") // should add toggle or something more??
         
       };
+      addClassToTitle()
 
       /* EXERCISE 3
        Write a function for changing the text of only the p which are children of a div.
       */
 
-      const changePcontent = function () {
-        //
+      const changePcontent = function (newPcontent) {
+        
+        changeNodes = document.querySelectorAll("div p") 
+        for(changeNode of changeNodes )
+        
+        changeNode.innerText = newPcontent
       };
+      changePcontent("haha i changed you")
 
       /* EXERCISE 4
        Write a function for changing the href property of every link to https://www.google.com
       */
 
       const changeUrls = function () {
-        //
+        
+        changeNodes = document.getElementsByTagName("a")  
+        for(changeNode of changeNodes )
+        
+        changeNode.setAttribute('href', "https://www.google.com")
       };
 
       /* EXERCISE 5
@@ -97,7 +109,10 @@
       */
 
       const addToTheSecond = function (content) {
-        //
+        const toSecondNode = document.getElementsByTagName("ul")[1]
+       
+        const newUl = document.createElement("ul")
+
       };
 
       /* EXERCISE 6
