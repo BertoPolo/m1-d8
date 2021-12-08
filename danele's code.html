@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+
+    <title>Accessing Elements in the DOM</title>
+
+
+    <style>
+      html {
+        font-family: sans-serif;
+        color: #333;
+      }
+      body {
+        max-width: 500px;
+        margin: 0 auto;
+        padding: 0 15px;
+      }
+      div div,
+      div article {
+        padding: 10px;
+        margin: 5px;
+        border: 1px solid #dedede;
+      }
+
+      .selected {
+        color: orange;
+        border-radius: 6px;
+        border-width: 2px;
+        border-color: orange;
+        border-style: solid;
+        padding: 4px;
+      }
+
+      .hidden {
+        display: none;
+      }
+    </style>
+  </head>
+
+
+  <body>
+
+
+    <script type="text/javascript">
+
+      // This function is a LISTENER for an EVENT
+      // That means that WHENEVER the EVENT is HAPPENING
+      // this FUNCTION is CALLED
+      const changeTextColor = function(e, color) {
+
+        if (color === undefined) {
+          color = "red"
+        }
+
+        e.target.style.color = color
+        e.target.innerText += ">"
+      }
+
+      const updateHeader = function(e) {
+        
+        // We first get a reference to the 'demo-id' header in our page
+        let demoHeader = document.getElementById("demo-id")
+
+        // We change the inner text of the header to match the user input
+        demoHeader.innerText = e.target.value
+
+        // We get the key that the user just pressed
+        let pressedKey = e.key
+
+        // And we change the color of the header if it's CTRL, SHIFT or ALT
+        switch (pressedKey) {
+          case "Shift": demoHeader.style.color = "green"; break
+          case "Control": demoHeader.style.color = "blue"; break
+          case "Alt": demoHeader.style.color = "orange"; break
+        }
+      }
+
+      const setHeaderClass = function() {
+
+        // First step: finding the "demo-id" element in the page
+        let demoIdNode = document.getElementById("demo-id") // This is a single element...
+        
+        // Second step: add the "selected" class to it
+        demoIdNode.classList.toggle("selected") // ...so we can modify it immediately
+      }
+     
+      const toggleAllHeadersClass = function() {
+
+        // First step: find all the H2 elements in our page
+        let headerNodes = document.getElementsByTagName("h2") // This is a COLLECTION of elements...
+
+        // Second step: toggle the "selected" class on them
+        for (let headerNode of headerNodes) {
+          headerNode.classList.toggle("selected") // ...so we need a FOR loop to process them all
+        }
+
+        /* The alternative above is just SYNTACTIC SUGAR
+        that is more concise than the alternative below
+
+        for (let i = 0; i < headerNodes.length; i++) {
+          let headerNode = headerNodes[i]
+
+          headerNode.classList.toggle("selected")
+        }*/
+      }
+
+
+      const createNewElement = function(e) {
+
+        // 'e' is the event data
+        // it's a JavaScript object containing additional information about what happened
+        // (IE: mouse click coordinates, clicked mouse button, HTML element the user clicked on...)
+
+        let creationButton = document.getElementById("toggle-button")
+
+        // HERE WE ARE CREATING A NEW HTML NODE / HTML ELEMENT (DYNAMICALLY)
+        // It will only live IN MEMORY, and it will be destroyed as soon as we exit the function
+        // UNLESS we attach it to some other PARENT in the DOM
+
+        let newElementNode = document.createElement("div")
+        // <div></div>
+
+        let usernameNode = document.getElementById("username")
+        let username = usernameNode.value
+
+        newElementNode.innerText = `Hi, I'm ${username} and I clicked on X: ${e.screenX} - Y: ${e.screenY}`
+        // <div>Hi, I'm the new guy here</div>
+
+        newElementNode.style.color = "coral"
+        // <div style="color:coral;">Hi, I'm the new guy here</div>
+
+        // WE WANT TO SET 'changeTextColor' AS A LISTENER FOR THE MOUSE OVER EVENT
+        // WARNING: we're NOT calling the function RIGHT NOW,
+        // so we don't have to put any brackets ()
+        // This down here is equivalent to writing:
+        // ...onmouseover="changeTextColor(event)"
+        // in the static HTML code
+        newElementNode.onmouseover = changeTextColor
+
+        // This second alternative is more powerful, because it allows us
+        // to specify MORE THAN ONE listener to the event
+        /*newElementNode.addEventListener("mouseover", changeTextColor)
+        newElementNode.addEventListener("mouseover", createNewElement)*/
+
+        // WE NOW ATTACH / APPEND THE NEWLY CREATED ELEMENT TO THE DOM
+        // From now on, it will show up in the page
+
+        // First step: find its new parent
+        let parentNode = document.getElementById("demo-id")
+
+        // Second step: attach the newly created element to that parent
+        parentNode.appendChild(newElementNode)
+
+
+        // WE NOW WANT TO REMOVE THE CLICKED BUTTON
+        // With the event data 'e' we can remove the clicked button
+        // without the need for searching it in the page
+        // (we already have a reference to the clicked button in the e.target property)
+        //e.target.remove()
+      }
+
+      window.onload = function() {
+        // Everything that should be executed as soon as the page is loaded and ready
+        // should belong to this function
+
+        // For instance, setting the header class...
+        setHeaderClass()
+      }      
+
+    </script>
+
+
+    <h1>Accessing Elements in the DOM</h1>
+
+    <input type="button" onclick="setHeaderClass()" value="Set header class" />
+
+    <button id="toggle-button" onclick="toggleAllHeadersClass()">Toggle all the H2 classes</button>
+
+    <button onclick="createNewElement(event)">Create new element</button>
+
+    <br />
+    <br />
+    <label for="username">Username:</label>
+    <input id="username" onkeyup="updateHeader(event)" type="text" placeholder="Write you username here" />
+
+    <div>
+      <h2 id="demo-id">ID (#demo-id)</h2>
+      <div>Access me by ID</div>
+    </div>
+
+
+    <div>
+      <h2>Class (.demo-class)</h2>
+      <div class="demo-class">Access me by class (1)</div>
+      <div class="demo-class">Access me by class (2)</div>
+    </div>
+
+
+    <div>
+      <h2>Tag (article)</h2>
+      <div id="article-container">
+        <!-- the function 'makeTextRed' is the LISTENER to the MOUSE OVER EVENT on this 'article' tag -->
+        <article onmouseover="changeTextColor(event, 'red')" onmouseleave="changeTextColor(event, 'black')" >Access me by tag (1)</article>
+        <article onmouseover="changeTextColor(event, 'red')" onmouseleave="changeTextColor(event, 'black')" >Access me by tag (2)</article>
+      </div>
+    </div>
+
+
+    <div id="demo-query">
+      <h2>Query Selector</h2>
+      <div>Access me by query</div>
+    </div>
+
+
+    <div>
+      <h2>Query Selector All</h2>
+      <div class="demo-query-all">Access me by query all (1)</div>
+      <div class="demo-query-all">Access me by query all (2)</div>
+    </div>
+
+
+    <h2>A more complex query</h2>
+    <div id="more-complex">
+      <ul>
+        <li>First element inside a list</li>
+        <li>Second element inside a list</li>
+        <li>Third element inside a list</li>
+      </ul>
+    </div>
+  </body>
+</html> 
