@@ -55,8 +55,13 @@
        Write a function for changing the title of the document in something else.
       */
 
+      // let newTitle=  " I changed the title, haha!"
+
       const changeTitle = function (newTitle) {
-        //
+       
+        const changerNode = document.getElementsByTagName("h1")[0]
+
+        changerNode.innerText = newTitle
       };
 
       /* EXERCISE 2
@@ -64,7 +69,11 @@
       */
 
       const addClassToTitle = function () {
-        //
+
+        const adderToTitleNode = document.getElementsByTagName("h1")[0]
+
+          adderToTitleNode.classList("myHeading") // should add toggle or something more??
+        
       };
 
       /* EXERCISE 3
